@@ -10,8 +10,12 @@ var mongo = require('mongodb');
 var host = "127.0.0.1";
 var port = 27017; //mongo.Connection.DEFAULT_PORT;
 var db = new mongo.Db("NEWS", new mongo.Server(host,port,{})); //name and topology
+var guonei = false;
+var wechat = true;
+
 
 //guonei source
+if (guonei === true) {
 setInterval(function(){
 var options = {
 	host : "api.avatardata.cn",
@@ -49,10 +53,12 @@ var request = http.request(options,function(res){
 	
 });
 request.end();   //not res.end()
-},2000);
+},500);
+}
 
 //wechat source
-var keyword = "美人鱼";
+if (wechat === true) {
+var keyword = "股票";
 var pageNew = 1;
 setInterval(function(){
 var options = {
@@ -91,8 +97,8 @@ var request = http.request(options,function(res){
 	
 });
 request.end();   //not res.end()
-},2000);
-
+},500);
+}
 
 
 
