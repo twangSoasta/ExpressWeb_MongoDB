@@ -1,0 +1,22 @@
+<html>
+  <head><meta charset="utf-8"/>
+    <title>显示MongoDB搜索结果</title>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+<body>
+   <h1>显示MongoDB搜索结果</h1>
+   <ul id="results"><font color="blue">猴年吉祥如意</font></ul>
+             
+<script>
+  var socket = io('http://localhost:8080');
+  var ul = document.getElementById("results"); 
+  socket.on('news', function (data) {
+    var li = document.createElement("li");
+	li.innerHTML = "<strong>" + data.title +"   "+ data.timestamp+"</strong>";
+	ul.insertBefore(li,ul.getElementsByTagName("li")[0]);
+    socket.emit('my other event', { hellohtml: 'datahtml' });
+  });
+</script>
+</body>
+</html>
+
