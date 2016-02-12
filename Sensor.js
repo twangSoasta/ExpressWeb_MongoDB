@@ -33,6 +33,17 @@ function handler(req,res){
 			console.log("sent");
 		
 		},5000);
+		
+		setInterval(function(){
+			json = getSensorData();
+		    ul = "SENSOR "+ json.id + " NAME: "+json.name+ " DATA: "+
+		    json.value + " TIMESTAMP: "+ json.timestamp;
+	//	    data = data.toString("utf8").replace("猴年吉祥如意",ul); 
+            io.emit('news1', json);
+			console.log("sent");
+		
+		},3000);
+		
 		});
 }
 
@@ -46,6 +57,7 @@ var sensorData = {
 	"id" : 1,
 	"name" : "sensor_name1",
 	"value" : 34,
+	"valueArray" : [],
 	"timestamp" : "2016-02-12T18:34:00Z"
 };
 
@@ -57,6 +69,7 @@ function getSensorData(){
     var timestamp = date.getFullYear()+"-"+ month +"-"+day+"  "+date.getHours()
                 +":"+date.getMinutes()+":"+date.getSeconds();
 	sensorData.value ++;
+	sensorData.valueArray.push(sensorData.value);
 	sensorData.timestamp = timestamp;
 	return sensorData;
 	

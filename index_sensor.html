@@ -7,20 +7,37 @@
 <body>
    <h1>显示Sensor数据</h1>
    <ul id="results"><font color="blue">猴年吉祥如意</font>
-   <li id="liid"><font color="green">whatever</font></li>
+   <li id="liid"><font color="green">whatever1</font></li>
+   <li id="liid1"><font color="red">whatever2</font></li>
    </ul>         
 <script>
 var socket = io('http://localhost:8080');
   var ul = document.getElementById("results"); 
   console.log("starting");
   socket.on('news', function (json) {
-    console.log("got event!",json);
+  //  console.log("got event!",json);
 	var liold = document.getElementsByTagName("li")[0]; 
     var li = document.createElement("li");
-	li.innerHTML = "<strong>"+ "Sensor "+ json.id + " sensor name: "+json.name+ " sensor data: "+
-		         json.value + " timestamp: "+ json.timestamp +"</strong>";
+	var sortedArray = json.valueArray.sort();    //console.log(sortedArray);
+    var percentile50 = sortedArray[Math.floor(sortedArray.length/2)]; 
+	li.innerHTML = "<strong>"+ "Sensor "+ json.id + " name: "+json.name+ " sensor data: "+
+		         json.value + " Max: "+ Math.max.apply(null,json.valueArray) + " Min: "+ 
+				 Math.min.apply(null,json.valueArray) + " Mean: "+ percentile50 + " Num:"+sortedArray.length+
+				 " timestamp: "+ json.timestamp +"</strong>";
    // ul.replaceChild(li,ul.getElementsByTagName("li")[0]);
    ul.replaceChild(li,liold);
+   //ul.appendChild(li);
+  });
+  
+  socket.on('news1', function (json) {
+ //   console.log("got event!",json);
+	var liold1 = document.getElementsByTagName("li")[1]; 
+    var li1 = document.createElement("li");
+	li1.innerHTML = "<strong>"+ "Sensor "+ (json.id+1) + " name: "+json.name+ " sensor data: "+
+		         (json.value+3) + " Max: "+ (Math.max.apply(null,json.valueArray)+3) + " Min: "+ 
+				 (Math.min.apply(null,json.valueArray)+3) + " timestamp: "+ json.timestamp +"</strong>";
+   // ul.replaceChild(li,ul.getElementsByTagName("li")[0]);
+   ul.replaceChild(li1,liold1);
    //ul.appendChild(li);
   });
 </script>
