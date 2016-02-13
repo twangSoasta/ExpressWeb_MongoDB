@@ -17,30 +17,29 @@ var header = {
 function handler(req,res){
 	fs.readFile("./index_sensor.html",function(err,data){
 		console.log(err);		
-		var json = getSensorData();
+		var json = getSensorData(0);
+		var json1 = getSensorData(1);
 		var ul = "SENSOR "+ json.id + " NAME: "+json.name+ " DATA: "+
-		         json.value + " TIMESTAMP: "+ json.timestamp;
-	//	data = data.toString("utf8").replace("猴年吉祥如意",ul); 
-    //    io.emit("news",json);			
+		         json.value + " TIMESTAMP: "+ json.timestamp;	
 	    res.writeHead(200,header);
 	    res.end(data);
 		setInterval(function(){
-			json = getSensorData();
+			json = getSensorData(0);
+			json.valueArray.push(sensorDataArr[0].value);
 		    ul = "SENSOR "+ json.id + " NAME: "+json.name+ " DATA: "+
 		    json.value + " TIMESTAMP: "+ json.timestamp;
-	//	    data = data.toString("utf8").replace("猴年吉祥如意",ul); 
             io.emit('news', json);
-			console.log("sent");
+//			console.log("sent1");
 		
-		},5000);
+		},6000);
 		
 		setInterval(function(){
-			json = getSensorData();
-		    ul = "SENSOR "+ json.id + " NAME: "+json.name+ " DATA: "+
-		    json.value + " TIMESTAMP: "+ json.timestamp;
-	//	    data = data.toString("utf8").replace("猴年吉祥如意",ul); 
-            io.emit('news1', json);
-			console.log("sent");
+			json1 = getSensorData(1);
+			json1.valueArray.push(sensorDataArr[1].value);
+		    ul = "SENSOR "+ json1.id + " NAME: "+json1.name+ " DATA: "+
+		    json1.value + " TIMESTAMP: "+ json1.timestamp;
+            io.emit('news1', json1);
+//			console.log("sent2");
 		
 		},3000);
 		
@@ -51,9 +50,11 @@ server.listen(port,function(){
 	console.log("starting listening on port:",port);
 });
 
+io.on("connection",function(){
+	console.log("sockets connected!");
+});
 
-
-var sensorData = {
+var sensorData1 = {
 	"id" : 1,
 	"name" : "sensor_name1",
 	"value" : 34,
@@ -61,16 +62,29 @@ var sensorData = {
 	"timestamp" : "2016-02-12T18:34:00Z"
 };
 
-function getSensorData(){
+var sensorData2 = {
+	"id" : 2,
+	"name" : "sensor_name2",
+	"value" : 35,
+	"valueArray" : [],
+	"timestamp" : "2016-02-12T18:34:00Z"
+};
+
+var sensorDataArr = [];
+sensorDataArr[0] = sensorData1;
+sensorDataArr[1] = sensorData2;
+
+function getSensorData(index){
 
 	var date = new Date();
     var month = date.getMonth()<10 ? "0"+(date.getMonth()+1):date.getMonth()+1;
     var day = date.getDate()<10 ? "0"+date.getDate():date.getDate();
     var timestamp = date.getFullYear()+"-"+ month +"-"+day+"  "+date.getHours()
                 +":"+date.getMinutes()+":"+date.getSeconds();
-	sensorData.value ++;
-	sensorData.valueArray.push(sensorData.value);
-	sensorData.timestamp = timestamp;
-	return sensorData;
-	
+	sensorDataArr[index].value = Math.floor(Math.random()*100);	
+	sensorDataArr[index].timestamp = timestamp;
+	return sensorDataArr[index];	
 }
+
+
+

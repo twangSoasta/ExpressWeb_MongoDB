@@ -15,28 +15,27 @@ var socket = io('http://localhost:8080');
   var ul = document.getElementById("results"); 
   console.log("starting");
   socket.on('news', function (json) {
-  //  console.log("got event!",json);
 	var liold = document.getElementsByTagName("li")[0]; 
     var li = document.createElement("li");
-	var sortedArray = json.valueArray.sort();    //console.log(sortedArray);
+	var sortedArray = json.valueArray.sort(function(a,b){return a-b});    //console.log("1 ",sortedArray);
     var percentile50 = sortedArray[Math.floor(sortedArray.length/2)]; 
 	li.innerHTML = "<strong>"+ "Sensor "+ json.id + " name: "+json.name+ " sensor data: "+
 		         json.value + " Max: "+ Math.max.apply(null,json.valueArray) + " Min: "+ 
 				 Math.min.apply(null,json.valueArray) + " Mean: "+ percentile50 + " Num:"+sortedArray.length+
 				 " timestamp: "+ json.timestamp +"</strong>";
-   // ul.replaceChild(li,ul.getElementsByTagName("li")[0]);
    ul.replaceChild(li,liold);
    //ul.appendChild(li);
   });
   
   socket.on('news1', function (json) {
- //   console.log("got event!",json);
 	var liold1 = document.getElementsByTagName("li")[1]; 
     var li1 = document.createElement("li");
-	li1.innerHTML = "<strong>"+ "Sensor "+ (json.id+1) + " name: "+json.name+ " sensor data: "+
-		         (json.value+3) + " Max: "+ (Math.max.apply(null,json.valueArray)+3) + " Min: "+ 
-				 (Math.min.apply(null,json.valueArray)+3) + " timestamp: "+ json.timestamp +"</strong>";
-   // ul.replaceChild(li,ul.getElementsByTagName("li")[0]);
+	var sortedArray1 = json.valueArray.sort(function(a,b){return a-b});    //console.log("2 ",sortedArray1);
+    var percentile50_1 = sortedArray1[Math.floor(sortedArray1.length/2)]; 
+	li1.innerHTML = "<strong>"+ "Sensor "+ json.id + " name: "+json.name+ " sensor data: "+
+		         json.value + " Max: "+ Math.max.apply(null,json.valueArray) + " Min: "+ 
+				 Math.min.apply(null,json.valueArray) + " Mean: "+ percentile50_1 + " Num:"+sortedArray1.length+
+				 " timestamp: "+ json.timestamp +"</strong>";
    ul.replaceChild(li1,liold1);
    //ul.appendChild(li);
   });
