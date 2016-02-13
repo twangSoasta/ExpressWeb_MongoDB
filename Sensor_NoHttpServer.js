@@ -62,7 +62,7 @@ var header1 = {
 console.log("Non Http Socket Server Listerning on Port:",portapp);
 
 
-ioapp.on("connection",function(socket){
+ioapp.on("connection",function(socket){               //io is a server and listening to connection upon requests and generate a socket to emit/reactive to events
 	console.log("sockets2 connected!");	
 	var json1 = getSensorData(1);
 	console.log("app file init done");    
@@ -71,7 +71,7 @@ ioapp.on("connection",function(socket){
 		json1.valueArray.push(sensorDataArr[1].value);
 	    ul = "SENSOR "+ json1.id + " NAME: "+json1.name+ " DATA: "+
 	    json1.value + " TIMESTAMP: "+ json1.timestamp;
-        ioapp.sockets.emit('news1', json1);
+        socket.emit('news1', json1);   //io.emit is a broadcast 
 //		console.log("sent2");
 	
 	},3000);
