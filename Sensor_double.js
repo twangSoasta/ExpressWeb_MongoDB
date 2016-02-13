@@ -12,10 +12,9 @@ var header = {
 //create http server instance
 //reads an html file and display the content on the web page upon any incoming connection
 function handler(req,res){
-	fs.readFile("./index_sensor.html",function(err,data){
+	fs.readFile("./index_sensor_double.html",function(err,data){
 		console.log(err);		
 		var json = getSensorData(0);
-		var json1 = getSensorData(1);
 		var ul = "SENSOR "+ json.id + " NAME: "+json.name+ " DATA: "+
 		         json.value + " TIMESTAMP: "+ json.timestamp;	
 	    res.writeHead(200,header);
@@ -51,27 +50,37 @@ io.on("connection",function(socket){
 //start of express server 
 var app = require('express')(); // initialize app to be a function handler to be supplied to an http server
 var serverapp = http.Server(app);  //server by express can also passed into socketio
-//var ioapp = require('socket.io')(serverapp);
+var ioapp = require('socket.io')(serverapp);
 var portapp = 8081;   //force express server to listen on differnt port, 2nd web socket
+var header1 = {
+	"Content-Type":"text/html",
+	"Access-Control-Allow-Origin":"http://127.0.0.1:8081",
+	"Access-Control-Allow-Credentials": "true"
+}
 serverapp.listen(portapp,function(){
 	console.log("Express Server listening on port:",portapp);
 });
 
 app.get('/',function(req,res){
-	res.sendFile(__dirname + "/index_sensor.html");
+	res.setHeader("Content-Type","text/html");   // can't use writeHeader to avoid double writes
+	res.setHeader("Access-Control-Allow-Origin","http://127.0.0.1:8081");
+	res.setHeader("Access-Control-Allow-Credentials","true");
+	var json1 = getSensorData(1);
+	res.sendFile(__dirname + "/index_sensor_double.html");
+	console.log("app file init done");    
 		setInterval(function(){
 		json1 = getSensorData(1);
 		json1.valueArray.push(sensorDataArr[1].value);
 	    ul = "SENSOR "+ json1.id + " NAME: "+json1.name+ " DATA: "+
 	    json1.value + " TIMESTAMP: "+ json1.timestamp;
-        io.sockets.emit('news1', json1);
+        ioapp.sockets.emit('news1', json1);
 //		console.log("sent2");
 	
 	},3000);
 	
 });
 
-io.on("connection",function(socket){
+ioapp.on("connection",function(socket){
 	console.log("sockets2 connected!");	
 	socket.on("newsback1",function(a){
 		console.log("Got message back from JS2: ",a);
