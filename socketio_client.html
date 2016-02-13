@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head><meta charset="utf-8"/>
+    <title>显示Sensor数据</title>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+  </head>
+<body>
+   <h1>显示Sensor数据</h1>
+   <ul id="results"><font color="blue" size="10">猴年吉祥如意</font>
+   <li id="liid"><font color="green">whatever1</font></li>
+   <li id="liid1"><font color="red">whatever2</font></li>
+   </ul>         
+<script>
+var socket1 = io.connect('http://localhost:8081'); 
+var ul = document.getElementById("results"); 
+  socket1.on('news1', function (json) {
+	var liold1 = document.getElementsByTagName("li")[1]; 
+    var li1 = document.createElement("li");
+	var sortedArray1 = json.valueArray.sort(function(a,b){return a-b});    console.log("2 ",sortedArray1);
+    var percentile50_1 = sortedArray1[Math.floor(sortedArray1.length/2)]; 
+	li1.innerHTML = "<strong>"+ "Sensor "+ json.id + " name: "+json.name+ " sensor data: "+
+		         json.value + " Max: "+ Math.max.apply(null,json.valueArray) + " Min: "+ 
+				 Math.min.apply(null,json.valueArray) + " Mean: "+ percentile50_1 + " Num:"+sortedArray1.length+
+				 " timestamp: "+ json.timestamp +"</strong>";
+   ul.replaceChild(li1,liold1);
+   //ul.appendChild(li);
+   socket1.emit("newsback1",{"message":"2 updated"});
+  });
+</script>
+</body>
+</html>
