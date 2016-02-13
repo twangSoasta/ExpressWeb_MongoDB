@@ -22,7 +22,8 @@ function handler(req,res){
 		var ul = "SENSOR "+ json.id + " NAME: "+json.name+ " DATA: "+
 		         json.value + " TIMESTAMP: "+ json.timestamp;	
 	    res.writeHead(200,header);
-	    res.end(data);
+	    res.end(data);              //send initial header and data 
+		
 		setInterval(function(){
 			json = getSensorData(0);
 			json.valueArray.push(sensorDataArr[0].value);
@@ -32,7 +33,7 @@ function handler(req,res){
 //			console.log("sent1");
 		
 		},6000);
-		
+			
 		setInterval(function(){
 			json1 = getSensorData(1);
 			json1.valueArray.push(sensorDataArr[1].value);
@@ -50,8 +51,15 @@ server.listen(port,function(){
 	console.log("starting listening on port:",port);
 });
 
-io.on("connection",function(){
+io.on("connection",function(socket){
 	console.log("sockets connected!");
+	socket.on("newsback",function(a){
+		console.log("Got message back from JS: ",a);
+	});
+	
+	socket.on("newsback1",function(a){
+		console.log("Got message back from JS: ",a);
+	});
 });
 
 var sensorData1 = {

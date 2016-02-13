@@ -6,7 +6,7 @@
   </head>
 <body>
    <h1>显示Sensor数据</h1>
-   <ul id="results"><font color="blue">猴年吉祥如意</font>
+   <ul id="results"><font color="blue" size="10">猴年吉祥如意</font>
    <li id="liid"><font color="green">whatever1</font></li>
    <li id="liid1"><font color="red">whatever2</font></li>
    </ul>         
@@ -25,7 +25,9 @@ var socket = io('http://localhost:8080');
 				 " timestamp: "+ json.timestamp +"</strong>";
    ul.replaceChild(li,liold);
    //ul.appendChild(li);
+   socket.emit("newsback",{"message":"1 updated"});
   });
+  
   
   socket.on('news1', function (json) {
 	var liold1 = document.getElementsByTagName("li")[1]; 
@@ -38,6 +40,7 @@ var socket = io('http://localhost:8080');
 				 " timestamp: "+ json.timestamp +"</strong>";
    ul.replaceChild(li1,liold1);
    //ul.appendChild(li);
+   socket.emit("newsback1",{"message":"2 updated"});
   });
 </script>
 </body>
