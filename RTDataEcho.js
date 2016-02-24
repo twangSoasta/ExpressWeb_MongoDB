@@ -10,7 +10,10 @@ var server = http.createServer(function(req,res){
 	var pathName = url.parse(req.url).pathname; 
 	var query = url.parse(req.url).query;
     if (query == undefined) {
-		console.log("Get a null query!")
+		console.log("Get a null query!");
+		res.writeHead("404",{"content-type":"text/plain"});
+		res.write("Sorry can't find a query in the request!");
+		res.end();
 	} else {
 	var string = decodeURIComponent(query.substring((query.indexOf("=") +1),query.length));
 	console.log(pathName,"   ",string);

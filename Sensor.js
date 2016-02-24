@@ -32,7 +32,7 @@ function handler(req,res){
             io.emit('news', json);
 //			console.log("sent1");
 		
-		},6000);
+		},4500);
 			
 		setInterval(function(){
 			json1 = getSensorData(1);

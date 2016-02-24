@@ -10,7 +10,7 @@ var mongo = require('mongodb');
 var host = "127.0.0.1";
 var port = 27017; //mongo.Connection.DEFAULT_PORT;
 var db = new mongo.Db("NEWS", new mongo.Server(host,port,{})); //name and topology
-var guonei = false;
+var guonei = true;
 var wechat = true;
 
 
@@ -58,7 +58,7 @@ request.end();   //not res.end()
 
 //wechat source
 if (wechat === true) {
-var keyword = "股票";
+var keyword = "王思聪";
 var pageNew = 1;
 setInterval(function(){
 var options = {
@@ -90,7 +90,7 @@ var request = http.request(options,function(res){
 		};
 //		console.log(jsonToWrite);
         writeToMongoDB("wechat",jsonToWrite,function(err,res){
-			console.log("wechat write done: "+err); //+"\n"+JSON.stringify(res));			
+			console.log("wechat write done: "+err); // +"\n"+JSON.stringify(res));			
 		});        
 		pageNew ++;
 	});
@@ -104,9 +104,10 @@ request.end();   //not res.end()
 
 function writeToMongoDB(collectionName,json,callback){
  db.open(function(error){
+// 	console.log("open db returns: "+error);
  	db.collection(collectionName,function(error,collection){
  		if (error) {
- 			console.log(error);
+ 	//		console.log("open collection returns: "+error);
  		} else {
  		collection.insert(json,function(err,res){
  		//	console.log("Successfully inserted twang: "+err+"\n"+JSON.stringify(res));
